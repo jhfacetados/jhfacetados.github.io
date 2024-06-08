@@ -78,7 +78,7 @@ async function setupViewer(){
 
     await model.addEventListener("change", async (event) => {
         await viewer.scene.disposeSceneModels()
-        await viewer.load("https://github.com/jhfacetados/jhfacetados.github.io/raw/main/src/gems/"+event.target!.selectedOptions[0].textContent+".glb")
+        await viewer.load("https://raw.githubusercontent.com/Asdii/gemList/main/gems/"+event.target!.selectedOptions[0].textContent+".glb")
         await makeDiam(event.target!.selectedOptions[0].textContent);
     })
 
