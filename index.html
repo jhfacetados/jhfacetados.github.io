@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>WebGi starter</title>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			text-align: center;
+			margin-top: 50px;
+		}
+
+		button {
+			margin: 10px;
+			padding: 10px 20px;
+			font-size: 16px;
+		}
+	</style>
+</head>
+
+<body>
+	<select id="valueSelect">
+	</select>
+
+	<script>
+		function loadFileList() {
+			fetch('http://jhfacetados.github.io/gems.json')
+				.then(response => response.json())
+				.then(files => {
+					files.forEach((file, index) => {
+						const option = document.createElement('option');
+						option.value = file;
+						option.textContent = file;
+						valueSelect.appendChild(option);
+					});
+				})
+				.catch(error => console.error('Error al cargar la lista de archivos:', error));
+		}
+		window.onload = loadFileList;
+	</script>
+
+	<div id="webgi-canvas-container">
+		<canvas id="webgi-canvas"></canvas>
+	</div>
+
+	<script src="src/index.ts" type="module"></script>
+</body>
+
+</html>
