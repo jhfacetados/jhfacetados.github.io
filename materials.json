@@ -1,0 +1,222 @@
+{
+	"materials": {
+		"material": [
+			{
+				"_name": "Fluorita",
+				"_ri": "1.43",
+				"_dispersion": "0.000",
+				"_color": "#D7F2DB",
+				"_clarity": "85",
+				"_density": "1"
+			},
+			{
+				"_name": "Ópalo",
+				"_ri": "1.45",
+				"_dispersion": "0.000",
+				"_color": "#FFFEF6",
+				"_clarity": "80",
+				"_density": "1"
+			},
+			{
+				"_name": "Cuarzo",
+				"_ri": "1.54",
+				"_dispersion": "0.013",
+				"_color": "#FFFFFF",
+				"_clarity": "100",
+				"_density": "1"
+			},
+			{
+				"_name": "Amatista (Cuarzo)",
+				"_ri": "1.54",
+				"_dispersion": "0.013",
+				"_color": "#CAAEDD",
+				"_clarity": "100",
+				"_density": "1"
+			},
+			{
+				"_name": "Citrino (Cuarzo)",
+				"_ri": "1.54",
+				"_dispersion": "0.013",
+				"_color": "#FFEA64",
+				"_clarity": "100",
+				"_density": "1"
+			},
+			{
+				"_name": "Cuarzo ahumado",
+				"_ri": "1.54",
+				"_dispersion": "0.013",
+				"_color": "#E6E2D6",
+				"_clarity": "100",
+				"_density": "2.6"
+			},
+			{
+				"_name": "Esmeralda (Berilio)",
+				"_ri": "1.58",
+				"_dispersion": "0.014",
+				"_color": "#2EAB85",
+				"_clarity": "80",
+				"_density": "1"
+			},
+			{
+				"_name": "Aguamarina (Berilio)",
+				"_ri": "1.58",
+				"_dispersion": "0.014",
+				"_color": "#EBFFFF",
+				"_clarity": "100",
+				"_density": "1"
+			},
+			{
+				"_name": "Topacio",
+				"_ri": "1.61",
+				"_dispersion": "0.014",
+				"_color": "#F3F7FF",
+				"_clarity": "100",
+				"_density": "1"
+			},
+			{
+				"_name": "Turmalina",
+				"_ri": "1.62",
+				"_dispersion": "0.018",
+				"_color": "#F1C0DC",
+				"_clarity": "97",
+				"_density": "1.4"
+			},
+			{
+				"_name": "Dioptasa",
+				"_ri": "1.65",
+				"_dispersion": "0.030",
+				"_color": "#00D0C6",
+				"_clarity": "80",
+				"_density": "1"
+			},
+			{
+				"_name": "Peridoto",
+				"_ri": "1.65",
+				"_dispersion": "0.020",
+				"_color": "#DFF598",
+				"_clarity": "95",
+				"_density": "1"
+			},
+			{
+				"_name": "Tanzanita",
+				"_ri": "1.69",
+				"_dispersion": "0.012",
+				"_color": "#D5D1FF",
+				"_clarity": "100",
+				"_density": "2.00"
+			},
+			{
+				"_name": "Espinela",
+				"_ri": "1.72",
+				"_dispersion": "0.000",
+				"_color": "#FFE1ED",
+				"_clarity": "100",
+				"_density": "1"
+			},
+			{
+				"_name": "Piropo (Granate)",
+				"_ri": "1.74",
+				"_dispersion": "0.022",
+				"_color": "#B30000",
+				"_clarity": "100",
+				"_density": "2.00"
+			},
+			{
+				"_name": "Tsavorita (Granate)",
+				"_ri": "1.74",
+				"_dispersion": "0.022",
+				"_color": "#B3F0A8",
+				"_clarity": "100",
+				"_density": "1"
+			},
+			{
+				"_name": "Hessonita (Granate)",
+				"_ri": "1.74",
+				"_dispersion": "0.022",
+				"_color": "#FFDA72",
+				"_clarity": "100",
+				"_density": "1"
+			},
+			{
+				"_name": "Rodolita (Granate)",
+				"_ri": "1.76",
+				"_dispersion": "0.026",
+				"_color": "#B30071",
+				"_clarity": "95",
+				"_density": "1"
+			},
+			{
+				"_name": "Espesartina (Granate)",
+				"_ri": "1.80",
+				"_dispersion": "0.022",
+				"_color": "#FFB069",
+				"_clarity": "100",
+				"_density": "1"
+			},
+			{
+				"_name": "Demantoide (Granate)",
+				"_ri": "1.88",
+				"_dispersion": "0.022",
+				"_color": "#DCFFC2",
+				"_clarity": "100",
+				"_density": "1"
+			},
+			{
+				"_name": "Zafíro (Corindón)",
+				"_ri": "1.76",
+				"_dispersion": "0.018",
+				"_color": "#4558E5",
+				"_clarity": "100",
+				"_density": "1.40"
+			},
+			{
+				"_name": "Rubí (Corindón)",
+				"_ri": "1.76",
+				"_dispersion": "0.018",
+				"_color": "#DD155E",
+				"_clarity": "100",
+				"_density": "1.4"
+			},
+			{
+				"_name": "Zircón",
+				"_ri": "1.81",
+				"_dispersion": "0.039",
+				"_color": "#92F1FF",
+				"_clarity": "100",
+				"_density": "1"
+			},
+			{
+				"_name": "Zircón cúbico (CZ)",
+				"_ri": "2.15",
+				"_dispersion": "0.060",
+				"_color": "#FFFFFF",
+				"_clarity": "100",
+				"_density": "1"
+			},
+			{
+				"_name": "Diamante",
+				"_ri": "2.42",
+				"_dispersion": "0.044",
+				"_color": "#FFFFFF",
+				"_clarity": "100",
+				"_density": "1"
+			},
+			{
+				"_name": "Moisanita",
+				"_ri": "2.65",
+				"_dispersion": "0.104",
+				"_color": "#FFFFF8",
+				"_clarity": "100",
+				"_density": "1"
+			},
+			{
+				"_name": "Rutilo",
+				"_ri": "2.85",
+				"_dispersion": "0.280",
+				"_color": "#FFFFFF",
+				"_clarity": "100",
+				"_density": "1"
+			}
+		]
+	}
+}

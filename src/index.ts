@@ -29,7 +29,8 @@ import "./styles.css";
 
 async function setupViewer(){
 
-    let model = await document.getElementById("valueSelect")!
+    let model = await document.getElementById("designSelect")!
+    let material = await document.getElementById("materialSelect")!
 
     // Initialize the viewer
     const canvas = document.getElementById('webgi-canvas') as HTMLCanvasElement
@@ -57,14 +58,14 @@ async function setupViewer(){
     const ssao = await viewer.addPlugin(SSAOPlugin)
     await viewer.addPlugin(FrameFadePlugin)
     await viewer.addPlugin(GroundPlugin)
-    //const bloom = await viewer.addPlugin(BloomPlugin)
+    const bloom = await viewer.addPlugin(BloomPlugin)
     await viewer.addPlugin(TemporalAAPlugin,)
     const diamondPlugin = await viewer.addPlugin(DiamondPlugin)
     //const dof = await viewer.addPlugin(DepthOfFieldPlugin)
     await viewer.addPlugin(RandomizedDirectionalLightPlugin, false)
 
     ssr!.passes.ssr.passObject.lowQualityFrames = 0
-    //bloom.pass!.passObject.bloomIterations = 2
+    bloom.pass!.passObject.bloomIterations = 2
     ssao.passes.ssao.passObject.material.defines.NUM_SAMPLES = 4
 
     viewer.renderer.refreshPipeline()
@@ -76,19 +77,40 @@ async function setupViewer(){
     // if a separate envMap is specified it is also possible to set the envMapRotation
     diamondPlugin.envMapRotation = Math.PI / 2.0
 
+    let currentMaterial = ""
+    let currentModel = ""
+
     await model.addEventListener("change", async (event) => {
+        currentModel = await event.target!.selectedOptions[0].textContent
         await viewer.scene.disposeSceneModels()
-        await viewer.load("https://raw.githubusercontent.com/Asdii/gemList/main/gems/"+event.target!.selectedOptions[0].textContent+".glb")
-        await makeDiam(event.target!.selectedOptions[0].textContent);
+        if(currentMaterial && currentModel){
+            await viewer.load("https://raw.githubusercontent.com/Asdii/gemList/main/gems/"+currentModel+".glb")
+            await makeDiam(currentModel, currentMaterial);
+        } 
     })
 
-    async function makeDiam(modelName: string){
+    await material.addEventListener("change", async (event) => {
+        currentMaterial = await event.target!.selectedOptions[0].textContent
+        await viewer.scene.disposeSceneModels()
+        if(currentMaterial && currentModel){
+            await viewer.load("https://raw.githubusercontent.com/Asdii/gemList/main/gems/"+currentModel+".glb")
+            await makeDiam(currentModel, currentMaterial);
+        } 
+    })
+
+    async function makeDiam(modelName: string, materialName:any){
         const o = await viewer.scene.findObjectsByName(modelName)[0];
+
+        //let refractiveIndex = materials[material]._ri
+        const selectedMaterial = materials.find(material => material._name === materialName);
+        const riValue = selectedMaterial._ri;
+        const colorValue = selectedMaterial._color;
+        const dispersionValue = selectedMaterial._dispersion;
 
         await diamondPlugin.makeDiamond(
             <IMaterial<any>>o.material,
             {normalMapRes: 256, cacheKey: o.name.split('_')[0].split('-')[1]},
-            {isDiamond: true, color: "Red", refractiveIndex: 1.67}
+            {isDiamond: true, color: colorValue, refractiveIndex: riValue, dispersion:dispersionValue }
         )
     }
 }

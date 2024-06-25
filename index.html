@@ -5,35 +5,155 @@
 	<!-- Google tag (gtag.js) -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-W5M3371BPS"></script>
 	<script>
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
 
-	gtag('config', 'G-W5M3371BPS');
+		gtag('config', 'G-W5M3371BPS');
 	</script>
 	<title>JH Facetados</title>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 	<style>
-		body {
+		body,
+		html {
+			margin: 0;
+			padding: 0;
+			height: 100%;
+			width: 100%;
+			overflow: hidden;
 			font-family: Arial, sans-serif;
-			text-align: center;
-			margin-top: 50px;
 		}
 
-		button {
-			margin: 10px;
-			padding: 10px 20px;
-			font-size: 16px;
+		.controls {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 250px;
+			height: 100vh;
+			padding: 20px;
+			background-color: rgba(240, 240, 240, 0.9);
+			box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+			overflow-y: auto;
+			z-index: 10;
+		}
+
+		canvas {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 1;
+		}
+
+		@media (max-width: 768px) {
+			.controls {
+				width: 100%;
+				height: auto;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: auto;
+				border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+			}
+
+			canvas {
+				top: 50px;
+				/* Ajusta esto según la altura de la sección de controles en dispositivos móviles */
+			}
+		}
+
+		select {
+			width: 100%;
+			height: 100%;
+			-webkit-appearance: none;
+			-moz-appearance: none;
+			-ms-appearance: none;
+			appearance: none;
+			outline: 0;
+			box-shadow: none;
+			border: 0 !important;
+			background: #5c6664;
+			background-image: none;
+			flex: 1;
+			padding: 0 .5em;
+			color: #fff;
+			cursor: pointer;
+			font-size: 1em;
+			font-family: 'Open Sans', sans-serif;
+		}
+
+		select::-ms-expand {
+			display: none;
+		}
+
+		.select {
+			position: relative;
+			display: table-cell;
+			width: 20em;
+			height: 3em;
+			line-height: 3;
+			background: #5c6664;
+			overflow: hidden;
+			border-radius: .25em;
+			padding-right: 10px
+		}
+
+		.select::after {
+			content: '\25BC';
+			position: absolute;
+			top: 0;
+			right: 0;
+			padding: 0 1em;
+			background: #2b2e2e;
+			cursor: pointer;
+			pointer-events: none;
+			transition: .25s all ease;
+		}
+
+		.select:hover::after {
+			color: #23b499;
+		}
+
+		#selectContainer {
+			padding:10px
 		}
 	</style>
 </head>
 
 <body>
-	<h1>Sitio en construcción</h1>
-	<select id="valueSelect">
-	</select>
+
+
+
+
+	<div class="controls">
+
+		<h2>Controles</h2>
+		<div id="container">
+			<div id="selectContainer">
+				<div class="select">
+					<select id="materialSelect" name="format"></select>
+				</div>
+			</div>
+			<div id="selectContainer">
+				<div class="select">
+					<select id="designSelect" name="format"></select>
+				</div>
+			</div>
+
+		</div>
+		
+
+	</div>
+
+	<canvas id="webgi-canvas" class="backgroundCanvas"></canvas>
+
+
+
+
 	<script>
+		materials = []
 		function loadFileList() {
 			fetch('https://raw.githubusercontent.com/Asdii/gemList/main/gems.json')
 				.then(response => response.json())
@@ -42,17 +162,32 @@
 						const option = document.createElement('option');
 						option.value = file;
 						option.textContent = file;
-						valueSelect.appendChild(option);
+						designSelect.appendChild(option);
 					});
 				})
 				.catch(error => console.error('Error al cargar la lista de archivos:', error));
 		}
 		window.onload = loadFileList;
+
+		document.addEventListener("DOMContentLoaded", function () {
+			fetch('materials.json')
+				.then(response => response.json())
+				.then(data => {
+					materials = data.materials.material;
+					const selectElement = document.getElementById('materialSelect');
+
+					materials.forEach(material => {
+						const option = document.createElement('option');
+						option.value = material._name;
+						option.text = material._name;
+						selectElement.appendChild(option);
+					});
+				})
+				.catch(error => console.error('Error al cargar el JSON:', error))
+		});
 	</script>
 
-	<div id="webgi-canvas-container">
-		<canvas id="webgi-canvas"></canvas>
-	</div>
+
 
 	<script src="src/index.ts" type="module"></script>
 </body>
