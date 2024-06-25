@@ -170,7 +170,7 @@
 		window.onload = loadFileList;
 
 		document.addEventListener("DOMContentLoaded", function () {
-			fetch('materials.json')
+			fetch('https://raw.githubusercontent.com/Asdii/gemList/main/materials.json')
 				.then(response => response.json())
 				.then(data => {
 					materials = data.materials.material;
