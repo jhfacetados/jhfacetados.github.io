@@ -34,8 +34,8 @@
 			padding: 20px;
 			background-color: rgba(240, 240, 240, 0.9);
 			box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-			overflow-y: auto;
 			z-index: 10;
+			transition: height 0.3s ease-in-out, opacity 0.3s ease-in-out;
 		}
 
 		canvas {
@@ -49,8 +49,8 @@
 
 		@media (max-width: 768px) {
 			.controls {
-				width: 100%;
-				height: auto;
+				width: 50%;
+				height: 58vh;
 				top: 0;
 				left: 0;
 				right: 0;
@@ -117,33 +117,96 @@
 		}
 
 		#selectContainer {
-			padding:10px
+			padding: 10px
+		}
+
+		#imageScrollContainer {
+			height: 20vh;
+            display: flex;
+			flex-direction: column;
+            overflow-y: scroll;
+            width: 100%;
+            margin: 10px 0;
+        }
+        #imageScrollContainer img {
+            cursor: pointer;
+            max-height: 100px;
+        }
+
+		.modelImageDiv {
+			margin-bottom:10px;
+			display:contents;
+			border: #000000 6px outset;
+		}
+
+		#toggleButton {
+			transition: opacity 400ms;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        @media (max-width: 768px) {
+            #toggleButton {
+                display: block;
+            }
+        }
+
+		#controls-container.minimized {
+            height: 0;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
 		}
 	</style>
 </head>
 
 <body>
 
+	
+	<button id="toggleButton">Minimizar Controles</button>
 
-
-
-	<div class="controls">
-
+	<div class="controls" id="controls-container">
 		<h2>Controles</h2>
 		<div id="container">
+			
 			<div id="selectContainer">
 				<div class="select">
-					<select id="materialSelect" name="format"></select>
+					<select id="materialSelect" name="format">
+						<option value="Material">Material</option>
+					</select>
 				</div>
 			</div>
 			<div id="selectContainer">
 				<div class="select">
-					<select id="designSelect" name="format"></select>
+					<select id="formaSelect">
+						<option value="Forma">Forma</option>
+					</select>
 				</div>
 			</div>
-
+			<div id="selectContainer">
+				<div class="select">
+					<select id="indiceSelect">
+						<option value="Índice">Índice</option>
+					</select>
+				</div>
+			</div>
+			<div id="selectContainer">
+				<div class="select">
+					<select id="lwSelect">
+						<option value="L/W">L/W</option>
+					</select>
+				</div>
+			</div>
+			<div id="imageScrollContainer"></div>
+			<span id="selectedModel" hidden></span>
 		</div>
-		
+
 
 	</div>
 
@@ -153,20 +216,133 @@
 
 
 	<script>
-		materials = []
+		let materials = []
+		let gemData = [];
+
+		const formaSelect = document.getElementById("formaSelect");
+		const nombreSelect = document.getElementById("nombreSelect");
+		const indiceSelect = document.getElementById("indiceSelect");
+		const lwSelect = document.getElementById("lwSelect");
+		const imageScrollContainer = document.getElementById("imageScrollContainer");
+		const selectedImageSpan = document.getElementById("selectedModel");
+		const toggleButton = document.getElementById('toggleButton');
+		const controlsContainer = document.getElementById('controls-container');
+		let selectedImageName = "";
+		let isHeaderMinimized = false;
+
+
+		formaSelect.addEventListener("change", function () {
+			indiceSelect.value = "Índice";
+			lwSelect.value = "L/W";
+			filterData("forma")
+		});
+		indiceSelect.addEventListener("change", function () {
+			lwSelect.value = "L/W";
+			filterData("indice")
+		});
+		lwSelect.addEventListener("change", function () {
+			indiceSelect.value = "Índice";
+			filterData("lw")
+		});
+
 		function loadFileList() {
-			fetch('https://raw.githubusercontent.com/Asdii/gemList/main/gems.json')
+			fetch('https://raw.githubusercontent.com/Asdii/gemList/main/data.json')
 				.then(response => response.json())
-				.then(files => {
-					files.forEach((file, index) => {
-						const option = document.createElement('option');
-						option.value = file;
-						option.textContent = file;
-						designSelect.appendChild(option);
-					});
+				.then(data => {
+					gemData = data;
+					populateFormas(data);
 				})
 				.catch(error => console.error('Error al cargar la lista de archivos:', error));
 		}
+
+		function populateFormas(data) {
+			formaSelect.innerHTML = '<option value="Forma">Forma</option>';
+			data.forEach(forma => {
+				const option = document.createElement('option');
+				option.value = Object.keys(forma);
+				option.textContent = Object.keys(forma);
+				formaSelect.appendChild(option);
+			});
+		}
+
+		function populateLw(data) {
+			lwSelect.innerHTML = '<option value="L/W">L/W</option>';
+			const lws = [...new Set(data.map(item => item["l/w"]))];
+			lws.forEach(lw => {
+				const option = document.createElement('option');
+				option.value = lw;
+				option.textContent = lw;
+				lwSelect.appendChild(option);
+			});
+		}
+
+		function populateIndices(data) {
+			indiceSelect.innerHTML = '<option value="Índice">Índice</option>';
+			const indices = [...new Set(data.map(item => item.index))];
+			indices.forEach(indice => {
+				const option = document.createElement('option');
+				option.value = indice;
+				option.textContent = indice;
+				indiceSelect.appendChild(option);
+			});
+		}
+
+		function populateImages(data) {
+			imageScrollContainer.innerHTML = '';
+			const nombres = [...new Set(data.map(item => item.nombre))];
+			data.forEach(item => {
+				const div = document.createElement('div')
+				const img = document.createElement('img');
+				const span = document.createElement('span');
+				span.innerText = item.nombre
+				img.src = "https://raw.githubusercontent.com/Asdii/gemList/main/"+item.url_imagen;
+				img.alt = "https://raw.githubusercontent.com/Asdii/gemList/main/"+item.nombre;
+				img.addEventListener('click', () => {
+					selectedImageSpan.innerText = item.nombre
+					let event = new Event('click');
+					imageScrollContainer.dispatchEvent(event)
+				});
+				div.appendChild(img)
+				div.appendChild(span)
+				
+				div.classList.add("modelImageDiv")
+				imageScrollContainer.appendChild(div);
+			});
+		}
+
+		function filterData(calledBy) {
+			const selectedForma = formaSelect.value;
+			const selectedIndice = indiceSelect.value;
+			const selectedLw = lwSelect.value;
+
+			let filteredData = gemData;
+
+			if (selectedForma && selectedForma != "Forma") {
+				const formaData = gemData.find(entry => Object.keys(entry)[0] === selectedForma);
+				filteredData = formaData ? formaData[selectedForma] : [];
+			} else {
+				gemData.forEach(entry => {
+					const forma = Object.keys(entry)[0];
+					filteredData = filteredData.concat(entry[forma]);
+				});
+			}
+
+			if (selectedIndice && selectedIndice != "Índice") {
+				filteredData = filteredData.filter(item => item.index === selectedIndice);
+			}
+
+			if (selectedLw && selectedLw != "L/W") {
+				filteredData = filteredData.filter(item => item["l/w"] === selectedLw);
+			}
+			updateSelectOptions(filteredData, calledBy);
+		}
+
+		function updateSelectOptions(data, calledBy) {
+			if (calledBy != "indice") populateIndices(data);
+			if (calledBy != "lw") populateLw(data);
+			if (formaSelect.value != "Forma") populateImages(data);
+		}
+
 		window.onload = loadFileList;
 
 		document.addEventListener("DOMContentLoaded", function () {
@@ -185,6 +361,17 @@
 				})
 				.catch(error => console.error('Error al cargar el JSON:', error))
 		});
+
+		toggleButton.addEventListener('click', () => {
+        if (isHeaderMinimized) {
+            controlsContainer.classList.remove('minimized');
+            toggleButton.textContent = 'Minimizar Controles';
+        } else {
+            controlsContainer.classList.add('minimized');
+            toggleButton.textContent = 'Controles';
+        }
+        isHeaderMinimized = !isHeaderMinimized;
+    });
 	</script>
 
 

@@ -29,8 +29,9 @@ import "./styles.css";
 
 async function setupViewer(){
 
-    let model = await document.getElementById("designSelect")!
+    let model = await document.getElementById("selectedModel")!
     let material = await document.getElementById("materialSelect")!
+    let imageScrollContainer = await document.getElementById("imageScrollContainer")!
 
     // Initialize the viewer
     const canvas = document.getElementById('webgi-canvas') as HTMLCanvasElement
@@ -80,12 +81,18 @@ async function setupViewer(){
     let currentMaterial = ""
     let currentModel = ""
 
-    await model.addEventListener("change", async (event) => {
-        currentModel = await event.target!.selectedOptions[0].textContent
+    await imageScrollContainer.addEventListener("click", async (event) => {
+        currentModel = model.textContent
         await viewer.scene.disposeSceneModels()
         if(currentMaterial && currentModel){
+            let currentModelNumber = currentModel.match(".*? ")[0]
+            console.log(currentModelNumber)
+            let currentModelName   = currentModel.replace(currentModelNumber, "").replaceAll(" ", "_").replaceAll(".", "")
+            console.log(currentModelName)
+            let innerModelName     = currentModelNumber.replace(" ", "_").replace(".", "") + currentModelName
+            console.log(innerModelName)
             await viewer.load("https://raw.githubusercontent.com/Asdii/gemList/main/gems/"+currentModel+".glb")
-            await makeDiam(currentModel, currentMaterial);
+            await makeDiam(innerModelName, currentMaterial);
         } 
     })
 
@@ -93,8 +100,14 @@ async function setupViewer(){
         currentMaterial = await event.target!.selectedOptions[0].textContent
         await viewer.scene.disposeSceneModels()
         if(currentMaterial && currentModel){
+            let currentModelNumber = currentModel.match(".*? ")[0]
+            console.log(currentModelNumber)
+            let currentModelName   = currentModel.replace(currentModelNumber, "").replaceAll(" ", "_").replaceAll(".", "")
+            console.log(currentModelName)
+            let innerModelName     = currentModelNumber.replace(" ", "_").replace(".", "") + currentModelName
+            console.log(innerModelName)
             await viewer.load("https://raw.githubusercontent.com/Asdii/gemList/main/gems/"+currentModel+".glb")
-            await makeDiam(currentModel, currentMaterial);
+            await makeDiam(innerModelName, currentMaterial);
         } 
     })
 
