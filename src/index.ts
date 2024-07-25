@@ -23,7 +23,8 @@ import {
     ITexture,
     IMaterial,
     DepthOfFieldPlugin,
-    VariationConfiguratorPlugin
+    VariationConfiguratorPlugin,
+    Texture
 } from "webgi"
 import "./styles.css";
 
@@ -70,6 +71,8 @@ async function setupViewer(){
     ssao.passes.ssao.passObject.material.defines.NUM_SAMPLES = 4
 
     viewer.renderer.refreshPipeline()
+    const background = await viewer.getManager()!.importer!.importSinglePath<Texture>("./background/dikhololo_night_2k.hdr")
+    viewer.scene.environment = background!
 
     // First import the env map
     const diamondEnvMap = await viewer.getManager()!.importer!.importSinglePath<ITexture>('https://demo-assets.pixotronics.com/pixo/hdr/gem_2.hdr')

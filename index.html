@@ -26,13 +26,16 @@
 		}
 
 		.controls {
+			flex: 0 0 auto;
+			max-height: 90vh;
+			overflow-y: auto;
+			flex-direction: column;
 			position: fixed;
 			top: 0;
 			left: 0;
 			width: 250px;
-			height: 100vh;
 			padding: 20px;
-			background-color: rgba(240, 240, 240, 0.9);
+			background-color: rgba(255, 255, 255);
 			box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 			z-index: 10;
 			transition: height 0.3s ease-in-out, opacity 0.3s ease-in-out;
@@ -49,14 +52,30 @@
 
 		@media (max-width: 768px) {
 			.controls {
+				flex: 0 0 auto;
+				flex-direction: column;
 				width: 50%;
-				height: 58vh;
 				top: 0;
 				left: 0;
 				right: 0;
 				bottom: auto;
 				border-bottom: 2px solid rgba(0, 0, 0, 0.1);
 			}
+
+			#container {
+				background-color: #fff;
+				padding: 10px;
+				overflow: hidden; /* Asegura que el contenido no se desborde */
+				height: 90%;
+            }
+
+            .select {
+                margin-bottom: 10px;
+            }
+
+            .modelImageDiv {
+                margin-right: 5px;
+            }
 
 			canvas {
 				top: 50px;
@@ -121,12 +140,12 @@
 		}
 
 		#imageScrollContainer {
-			height: 20vh;
-            display: flex;
+			height: 60%;
 			flex-direction: column;
             overflow-y: scroll;
             width: 100%;
             margin: 10px 0;
+			display: flex;
         }
         #imageScrollContainer img {
             cursor: pointer;
@@ -137,6 +156,8 @@
 			margin-bottom:10px;
 			display:contents;
 			border: #000000 6px outset;
+			flex: 0 0 auto; /* Asegura que los elementos no se reduzcan */
+            margin-right: 10px;
 		}
 
 		#toggleButton {
@@ -163,6 +184,10 @@
             visibility: hidden;
             pointer-events: none;
 		}
+
+		#controls-div {
+			height: 100%;
+		}
 	</style>
 </head>
 
@@ -170,45 +195,45 @@
 
 	
 	<button id="toggleButton">Minimizar Controles</button>
-
-	<div class="controls" id="controls-container">
-		<h2>Controles</h2>
-		<div id="container">
-			
-			<div id="selectContainer">
-				<div class="select">
-					<select id="materialSelect" name="format">
-						<option value="Material">Material</option>
-					</select>
+	<div id="controls-div">
+		<nav class="controls" id="controls-container">
+			<h2>Controles</h2>
+			<div id="container">
+				
+				<div id="selectContainer">
+					<div class="select">
+						<select id="materialSelect" name="format">
+							<option value="Material">Material</option>
+						</select>
+					</div>
 				</div>
-			</div>
-			<div id="selectContainer">
-				<div class="select">
-					<select id="formaSelect">
-						<option value="Forma">Forma</option>
-					</select>
+				<div id="selectContainer">
+					<div class="select">
+						<select id="formaSelect">
+							<option value="Forma">Forma</option>
+						</select>
+					</div>
 				</div>
-			</div>
-			<div id="selectContainer">
-				<div class="select">
-					<select id="indiceSelect">
-						<option value="Índice">Índice</option>
-					</select>
+				<div id="selectContainer">
+					<div class="select">
+						<select id="indiceSelect">
+							<option value="Índice">Índice</option>
+						</select>
+					</div>
 				</div>
-			</div>
-			<div id="selectContainer">
-				<div class="select">
-					<select id="lwSelect">
-						<option value="L/W">L/W</option>
-					</select>
+				<div id="selectContainer">
+					<div class="select">
+						<select id="lwSelect">
+							<option value="L/W">L/W</option>
+						</select>
+					</div>
 				</div>
+				<div id="imageScrollContainer"></div>
+				<span id="selectedModel" hidden></span>
 			</div>
-			<div id="imageScrollContainer"></div>
-			<span id="selectedModel" hidden></span>
-		</div>
-
-
+		</nav>
 	</div>
+	
 
 	<canvas id="webgi-canvas" class="backgroundCanvas"></canvas>
 
