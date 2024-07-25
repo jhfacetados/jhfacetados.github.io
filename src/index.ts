@@ -71,7 +71,7 @@ async function setupViewer(){
     ssao.passes.ssao.passObject.material.defines.NUM_SAMPLES = 4
 
     viewer.renderer.refreshPipeline()
-    const background = await viewer.getManager()!.importer!.importSinglePath<Texture>("./background/dikhololo_night_2k.hdr")
+    const background = await viewer.getManager()!.importer!.importSinglePath<Texture>("https://github.com/jhfacetados/jhfacetados.github.io/raw/main/src/background/dikhololo_night_2k.hdr")
     viewer.scene.environment = background!
 
     // First import the env map
