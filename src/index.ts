@@ -24,7 +24,11 @@ import {
     IMaterial,
     DepthOfFieldPlugin,
     VariationConfiguratorPlugin,
-    Texture
+    Texture,
+    ISceneObject,
+    PresetGroup,
+    BackgroundPresetGroup,
+    EnvironmentPresetGroup
 } from "webgi"
 import "./styles.css";
 
@@ -59,7 +63,6 @@ async function setupViewer(){
     const ssr = await viewer.addPlugin(SSRPlugin)
     const ssao = await viewer.addPlugin(SSAOPlugin)
     await viewer.addPlugin(FrameFadePlugin)
-    await viewer.addPlugin(GroundPlugin)
     const bloom = await viewer.addPlugin(BloomPlugin)
     await viewer.addPlugin(TemporalAAPlugin,)
     const diamondPlugin = await viewer.addPlugin(DiamondPlugin)
@@ -71,11 +74,12 @@ async function setupViewer(){
     ssao.passes.ssao.passObject.material.defines.NUM_SAMPLES = 4
 
     viewer.renderer.refreshPipeline()
-    const background = await viewer.getManager()!.importer!.importSinglePath<Texture>("https://github.com/jhfacetados/jhfacetados.github.io/raw/main/src/background/dikhololo_night_2k.hdr")
-    viewer.scene.environment = background!
 
+    const preset = new EnvironmentPresetGroup()
+    viewer.scene.fixedEnvMapDirection = true
+    
     // First import the env map
-    const diamondEnvMap = await viewer.getManager()!.importer!.importSinglePath<ITexture>('https://demo-assets.pixotronics.com/pixo/hdr/gem_2.hdr')
+    const diamondEnvMap = await viewer.getManager()!.importer!.importSinglePath<ITexture&Texture>('https://demo-assets.pixotronics.com/pixo/hdr/gem_2.hdr')
     diamondPlugin.envMap = diamondEnvMap!
 
     // if a separate envMap is specified it is also possible to set the envMapRotation
@@ -121,14 +125,17 @@ async function setupViewer(){
         const selectedMaterial = materials.find(material => material._name === materialName);
         const riValue = selectedMaterial._ri;
         const colorValue = selectedMaterial._color;
-        const dispersionValue = selectedMaterial._dispersion;
+        const dispersionValue = selectedMaterial._dispersion * 0.1;
 
         await diamondPlugin.makeDiamond(
             <IMaterial<any>>o.material,
             {normalMapRes: 256, cacheKey: o.name.split('_')[0].split('-')[1]},
-            {isDiamond: true, color: colorValue, refractiveIndex: riValue, dispersion:dispersionValue }
+            {isDiamond: true, color: colorValue, refractiveIndex: riValue, dispersion:dispersionValue, envMapIntensity:2, reflectivity:0.2}
         )
     }
+    await viewer.setBackgroundMap("./assets/je_gray_02_4k.hdr");
+    await viewer.setEnvironmentMap("./assets/je_gray_02_4k.hdr");
+    viewer.scene.backgroundIntensity = 10
 }
 
 setupViewer()

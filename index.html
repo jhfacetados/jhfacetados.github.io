@@ -15,6 +15,20 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 	<style>
+		::-webkit-scrollbar {
+			width: 0.5em;
+			height: 0.5em
+		}
+		::-webkit-scrollbar-button {
+			background: #ccc
+		}
+		::-webkit-scrollbar-track-piece {
+			background: #888
+		}
+		::-webkit-scrollbar-thumb {
+			background: #eee
+		}
+
 		body,
 		html {
 			margin: 0;
@@ -142,7 +156,6 @@
 		#imageScrollContainer {
 			height: 60%;
 			flex-direction: column;
-            overflow-y: scroll;
             width: 100%;
             margin: 10px 0;
 			display: flex;
