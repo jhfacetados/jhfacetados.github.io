@@ -52,6 +52,9 @@
 			background-color: rgba(255, 255, 255);
 			box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 			z-index: 10;
+			border: none;
+            border-bottom-right-radius: 8px;
+			
 			transition: height 0.3s ease-in-out, opacity 0.3s ease-in-out;
 		}
 
@@ -64,7 +67,7 @@
 			z-index: 1;
 		}
 
-		@media (max-width: 768px) {
+		@media (max-width: 950px) {
 			.controls {
 				flex: 0 0 auto;
 				flex-direction: column;
@@ -77,9 +80,12 @@
 			}
 
 			#container {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
 				background-color: #fff;
 				padding: 10px;
-				overflow: hidden; /* Asegura que el contenido no se desborde */
+				overflow: hidden;
 				height: 90%;
             }
 
@@ -93,7 +99,6 @@
 
 			canvas {
 				top: 50px;
-				/* Ajusta esto según la altura de la sección de controles en dispositivos móviles */
 			}
 		}
 
@@ -169,7 +174,7 @@
 			margin-bottom:10px;
 			display:contents;
 			border: #000000 6px outset;
-			flex: 0 0 auto; /* Asegura que los elementos no se reduzcan */
+			flex: 0 0 auto;
             margin-right: 10px;
 		}
 
@@ -179,13 +184,13 @@
             top: 10px;
             right: 10px;
             padding: 10px 20px;
-            background-color: #007bff;
+            background-color: #5c6664;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
-        @media (max-width: 768px) {
+        @media (max-width: 950px) {
             #toggleButton {
                 display: block;
             }
@@ -201,13 +206,48 @@
 		#controls-div {
 			height: 100%;
 		}
+
+		#info-container {
+			transition: height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+			opacity: 85%;
+			font-size: small;
+            position: fixed; 
+            bottom: 20px;
+            right: 20px;
+            width: 25%;
+            padding: 10px;
+            background-color: white; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            border: 1px solid #ddd;
+			z-index: 999;
+        }
+
+		#info-container.minimized {
+            height: 0;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+		}
+
+		#info-container h4{
+			text-align: center;
+        }
+
+		#info-container p{
+			font-weight: bold;
+        }
+
+		#info-container span{
+			font-weight: normal;
+        }
 	</style>
 </head>
 
 <body>
 
 	
-	<button id="toggleButton">Minimizar Controles</button>
+	<button id="toggleButton">Minimizar</button>
 	<div id="controls-div">
 		<nav class="controls" id="controls-container">
 			<h2>Controles</h2>
@@ -247,6 +287,17 @@
 		</nav>
 	</div>
 	
+	<div id="info-container" class="minimized">
+		<h4>Sobre este diseño</h4>
+		<p>Nombre: <span id="nombre"></span></p>
+		<p>Sobre el autor: <span id="sobreAutor"></span></p>
+		<p>Facetas: <span id="facetas"></span></p>
+		<p>Índice Refractivo: <span id="ri"></span></p>
+		<p>Índice: <span id="index"></span></p>
+        <p>L/W: <span id="lw"></span></p>
+		<p>P/W: <span id="pw"></span></p>
+		<p>C/W: <span id="cw"></span></p>
+	</div>
 
 	<canvas id="webgi-canvas" class="backgroundCanvas"></canvas>
 
@@ -257,6 +308,7 @@
 		let materials = []
 		let gemData = [];
 
+		let designInfoCard = document.getElementById("info-container")
 		const formaSelect = document.getElementById("formaSelect");
 		const nombreSelect = document.getElementById("nombreSelect");
 		const indiceSelect = document.getElementById("indiceSelect");
@@ -348,12 +400,14 @@
 			});
 		}
 
+		let filteredData = []
+
 		function filterData(calledBy) {
 			const selectedForma = formaSelect.value;
 			const selectedIndice = indiceSelect.value;
 			const selectedLw = lwSelect.value;
 
-			let filteredData = gemData;
+			filteredData = gemData;
 
 			if (selectedForma && selectedForma != "Forma") {
 				const formaData = gemData.find(entry => Object.keys(entry)[0] === selectedForma);
@@ -403,9 +457,11 @@
 		toggleButton.addEventListener('click', () => {
         if (isHeaderMinimized) {
             controlsContainer.classList.remove('minimized');
-            toggleButton.textContent = 'Minimizar Controles';
+			designInfoCard.classList.remove('minimized')
+            toggleButton.textContent = 'Minimizar';
         } else {
             controlsContainer.classList.add('minimized');
+			designInfoCard.classList.add('minimized');
             toggleButton.textContent = 'Controles';
         }
         isHeaderMinimized = !isHeaderMinimized;

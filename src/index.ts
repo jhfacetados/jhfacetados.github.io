@@ -28,7 +28,8 @@ import {
     ISceneObject,
     PresetGroup,
     BackgroundPresetGroup,
-    EnvironmentPresetGroup
+    EnvironmentPresetGroup,
+    LoadingScreenPlugin
 } from "webgi"
 import "./styles.css";
 
@@ -37,6 +38,15 @@ async function setupViewer(){
     let model = await document.getElementById("selectedModel")!
     let material = await document.getElementById("materialSelect")!
     let imageScrollContainer = await document.getElementById("imageScrollContainer")!
+    let designInfoCard = await document.getElementById("info-container")
+    let nameDisplay = await document.getElementById("nombre")
+    let sobreAutorDisplay = await document.getElementById("sobreAutor")
+    let facetasDisplay = await document.getElementById("facetas")
+    let riDisplay = await document.getElementById("ri")
+    let indexDisplay = await document.getElementById("index")
+    let lwDisplay = await document.getElementById("lw")
+    let pwDisplay = await document.getElementById("pw")
+    let cwDisplay = await document.getElementById("cw")
 
     // Initialize the viewer
     const canvas = document.getElementById('webgi-canvas') as HTMLCanvasElement
@@ -49,13 +59,10 @@ async function setupViewer(){
     viewer.renderer.displayCanvasScaling = Math.min(window.devicePixelRatio, 1)
 
     const manager = await viewer.addPlugin(AssetManagerPlugin)
+    const loadingScreen = await viewer.addPlugin(new LoadingScreenPlugin)
     const camera = viewer.scene.activeCamera
     const position = camera.position
     const target = camera.target
-    const diamondsObjectNames = [
-        'test'
-    ]
-
     // Add WEBGi plugins
     await viewer.addPlugin(GBufferPlugin)
     await viewer.addPlugin(new ProgressivePlugin(32))
@@ -75,6 +82,13 @@ async function setupViewer(){
 
     viewer.renderer.refreshPipeline()
 
+    loadingScreen.logoImage = "./assets/logo.png"
+    loadingScreen.showOnFilesLoading = true
+    loadingScreen.minimizeOnSceneObjectLoad = true
+    loadingScreen.hideOnSceneObjectLoad = true
+    loadingScreen.showFileNames = false
+    loadingScreen.loadingTextHeader = "Cargando..."
+
     const preset = new EnvironmentPresetGroup()
     viewer.scene.fixedEnvMapDirection = true
     
@@ -89,15 +103,25 @@ async function setupViewer(){
     let currentModel = ""
 
     await imageScrollContainer.addEventListener("click", async (event) => {
-        currentModel = model.textContent
+        currentModel = model.textContent!
         await viewer.scene.disposeSceneModels()
         if(currentMaterial && currentModel){
-            let currentModelNumber = currentModel.match(".*? ")[0]
-            console.log(currentModelNumber)
-            let currentModelName   = currentModel.replace(currentModelNumber, "").replaceAll(" ", "_").replaceAll(".", "")
-            console.log(currentModelName)
-            let innerModelName     = currentModelNumber.replace(" ", "_").replace(".", "") + currentModelName
-            console.log(innerModelName)
+            let currentModelNumber = currentModel.match(".*? ")![0]
+            let currentModelName = currentModel.replace(currentModelNumber, "")
+            let currentModelNameFiltered   = currentModel.replace(currentModelNumber, "").replaceAll(" ", "_").replaceAll(".", "")
+            let innerModelName     = currentModelNumber.replace(" ", "_").replace(".", "") + currentModelNameFiltered
+
+            designInfoCard.classList.remove('minimized')
+            const diseño = [...new Set(filteredData.filter(item => item.nombre === currentModel))][0];
+            nameDisplay!.innerText = currentModelName
+            sobreAutorDisplay!.innerText = diseño["autor_info"]
+            facetasDisplay!.innerText = diseño["facets"]
+            riDisplay!.innerText = diseño["angles_for_ri"]
+            indexDisplay!.innerText = diseño["index"]
+            lwDisplay!.innerText = diseño["l/w"]
+            pwDisplay!.innerText = diseño["p/w"]
+            cwDisplay!.innerText = diseño["c/w"]
+
             await viewer.load("https://raw.githubusercontent.com/Asdii/gemList/main/gems/"+currentModel+".glb")
             await makeDiam(innerModelName, currentMaterial);
         } 
@@ -107,12 +131,9 @@ async function setupViewer(){
         currentMaterial = await event.target!.selectedOptions[0].textContent
         await viewer.scene.disposeSceneModels()
         if(currentMaterial && currentModel){
-            let currentModelNumber = currentModel.match(".*? ")[0]
-            console.log(currentModelNumber)
+            let currentModelNumber = currentModel.match(".*? ")![0]
             let currentModelName   = currentModel.replace(currentModelNumber, "").replaceAll(" ", "_").replaceAll(".", "")
-            console.log(currentModelName)
             let innerModelName     = currentModelNumber.replace(" ", "_").replace(".", "") + currentModelName
-            console.log(innerModelName)
             await viewer.load("https://raw.githubusercontent.com/Asdii/gemList/main/gems/"+currentModel+".glb")
             await makeDiam(innerModelName, currentMaterial);
         } 
